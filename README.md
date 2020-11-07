@@ -71,6 +71,8 @@ python __init__.py
 <a id="style-example"></a>
 ## style example
 
+样式json可以在[百度地图个性在线编辑器](http://wiki.lbsyun.baidu.com/custom/)中进行测试，样式满意再使用
+
 style是一个json数组，由三部分组成：featureType(要素)，elementType(属性)和stylers(样式)，格式如下：
 
 ```javascript
