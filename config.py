@@ -14,17 +14,24 @@ MY_STYLE = [
 }
 },
 {
-"featureType": "all",
-"elementType": "geometry",
+"featureType": "road",
+"elementType": "all",
+"stylers": {
+"visibility": "off"
+}
+},
+{
+"featureType": "background",
+"elementType": "all",
 "stylers": {
 "color": "#ffffffff"
 }
 },
 {
-"featureType": "building",
+"featureType": "water",
 "elementType": "all",
 "stylers": {
-"color": "#ff0000ff"
+"color": "#0000ffff"
 }
 }]
 
@@ -32,10 +39,10 @@ MY_STYLE = [
 TARGET_AD = '武汉市武昌区'
 
 # 根目录
-ROOT_DIR = './武汉'
+ROOT_DIR = './example'
 
 # 4-18，不同要素显示等级不同，参考README.md
 TARGET_LEVEL = 15
 
 # 目标突出要素，如果没有就填''
-TARGET_OBJECT = '建筑'
+TARGET_OBJECT = '水体'
