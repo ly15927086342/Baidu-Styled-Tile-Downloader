@@ -1,10 +1,10 @@
 武汉市武昌区.jpg信息:
 目标突出要素：水体
-时间：2020.11.7 14:15:37
+时间：2020.11.7 15:1:39
 等级：15
 瓦片范围：6211_1732-6220_1740
 瓦片数量：90
 经纬度范围：114.26042_30.49595-114.42031_30.62808
-样式信息：[{'featureType': 'all', 'elementType': 'labels', 'stylers': {'visibility': 'off'}}, {'featureType': 'all', 'elementType': 'geometry', 'stylers': {'color': '#ffffffff'}}, {'featureType': 'water', 'elementType': 'all', 'stylers': {'color': '#0000ffff'}}]
-压缩样式信息：t:all|e:l|v:off,t:all|e:g|c:#ffffffff,t:water|e:all|c:#0000ffff,
+样式信息：[{'featureType': 'all', 'elementType': 'labels', 'stylers': {'visibility': 'off'}}, {'featureType': 'road', 'elementType': 'all', 'stylers': {'visibility': 'off'}}, {'featureType': 'background', 'elementType': 'all', 'stylers': {'color': '#ffffffff'}}, {'featureType': 'water', 'elementType': 'all', 'stylers': {'color': '#0000ffff'}}]
+压缩样式信息：t:all|e:l|v:off,t:road|e:all|v:off,t:background|e:all|c:#ffffffff,t:water|e:all|c:#0000ffff,
 
