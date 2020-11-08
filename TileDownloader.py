@@ -42,8 +42,8 @@ class  TileDownloader(object):
 		url = ChinaAD().ADName_to_Url(self.AD)
 		if(url == False):
 			exit(0)
-		region = json.loads(requests.get(url).text)
-		self.bounds = getBounds(region)
+		self.region = json.loads(requests.get(url).text)
+		self.bounds = getBounds(self.region)
 		print('-----行政区获取完毕-----')
 
 
@@ -55,14 +55,11 @@ class  TileDownloader(object):
 		print('-----经纬度转瓦片号-----')
 		self.swTile = WGS84_to_TILE(self.bounds['southwest'][0],self.bounds['southwest'][1],self.level)
 		self.neTile = WGS84_to_TILE(self.bounds['northeast'][0],self.bounds['northeast'][1],self.level)
-		print(self.bounds)
-		print(self.swTile,self.neTile)
 		print('-----瓦片号获取完毕-----')
 
 
 		print('-----多线程爬取瓦片-----')
 		self.getTiles(self.swTile,self.neTile)
-		print(len(self.tile_list))
 		for tilexy in self.tile_list:
 			self.Task.put({
 				'x':tilexy[0],
