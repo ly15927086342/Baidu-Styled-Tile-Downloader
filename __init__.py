@@ -7,6 +7,7 @@ from config import *
 if __name__ == '__main__':
 
 	TD = TileDownloader(
+		type = TARGET_TYPE,
 		style = MY_STYLE,
 		AD = TARGET_AD,
 		level = TARGET_LEVEL,

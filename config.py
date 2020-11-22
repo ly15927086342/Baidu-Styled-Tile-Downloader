@@ -28,10 +28,10 @@ MY_STYLE = [
 }
 },
 {
-"featureType": "water",
+"featureType": "manmade",
 "elementType": "all",
 "stylers": {
-"color": "#0000ffff"
+"color": "#000000ff"
 }
 }]
 
@@ -42,7 +42,10 @@ TARGET_AD = '武汉市武昌区'
 ROOT_DIR = './example'
 
 # 4-18，不同要素显示等级不同，参考README.md
-TARGET_LEVEL = 15
+TARGET_LEVEL = 16
 
 # 目标突出要素，如果没有就填''
-TARGET_OBJECT = '水体'
+TARGET_OBJECT = 'rs'
+
+# 个性地图0；遥感影像1
+TARGET_TYPE = 1

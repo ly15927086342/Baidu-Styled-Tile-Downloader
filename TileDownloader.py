@@ -17,8 +17,16 @@ import threading
 核心类
 '''
 class  TileDownloader(object):
-	def __init__(self, style = [], AD = '', dir_path = './', target = '' , level = 15, scale = 1):
+	# @param type [0:个性地图栅格瓦片；1:遥感影像栅格瓦片]
+	# @param style [个性地图style json]
+	# @param AD [行政区划完整名称，如果是某个区，需要带上市，具体命名见ChinaAD.py]
+	# @param dir_path [输出文件的文件夹路径]
+	# @param target [突出要素的名称，可不写，只和输出文件名有关]
+	# @param level [地图的比例尺]
+	# @param scale [图片放大倍数，1为正常大小（256*256）]
+	def __init__(self, type = 0, style = [], AD = '', dir_path = './', target = '' , level = 15, scale = 1):
 		super( TileDownloader, self).__init__()
+		self.type = type
 		self.style = style
 		self.AD = AD
 		self.dir = dir_path
@@ -29,7 +37,7 @@ class  TileDownloader(object):
 		self.thread_pool = []
 		self.fail_list = []
 		self.target_obj = target
-		self.THREAD_MAX = 10
+		self.THREAD_MAX = 5
 
 	def run(self):
 		self.getTime()
@@ -60,16 +68,28 @@ class  TileDownloader(object):
 
 		print('-----多线程爬取瓦片-----')
 		self.getTiles(self.swTile,self.neTile)
+		print('瓦片总量：' + str(len(self.tile_list)))
 		for tilexy in self.tile_list:
-			self.Task.put({
-				'x':tilexy[0],
-				'y':tilexy[1],
-				'z':self.level,
-				'udt':self.time,
-				'scale':self.scale,
-				'ak':'8d6c8b8f3749aed6b1aff3aad6f40e37',
-				'styles':self.style_str
-				})
+			if self.type == 0:
+				self.Task.put({
+					'x':tilexy[0],
+					'y':tilexy[1],
+					'z':self.level,
+					'udt':self.time,
+					'scale':self.scale,
+					'ak':'8d6c8b8f3749aed6b1aff3aad6f40e37',
+					'styles':self.style_str
+					})
+			else:
+				self.Task.put({
+					'qt':'satepc',
+					'u':'x=%s;y=%s;z=%s;v=009;type=sate'%(tilexy[0],tilexy[1],self.level),
+					'udt':self.time,
+					'app':'webearth2',
+					'fm':46,
+					'x':tilexy[0],
+					'y':tilexy[1]
+					})
 		for i in range(0,self.THREAD_MAX):
 			t = threading.Thread(target=self.spideTile)
 			t.start()
@@ -122,7 +142,7 @@ class  TileDownloader(object):
 	# 检查文件夹路径
 	def checkParms(self):
 		if(not self.dir[-1:]=='/'):
-			self.dir = self.dir + '/' + '_'.join([self.AD,self.target_obj]) + '/'
+			self.dir = self.dir + '/' + '_'.join([self.AD,self.target_obj,str(self.level)]) + '/'
 		if(not os.path.exists(self.dir)):
 			try:
 				os.makedirs(self.dir)
@@ -139,6 +159,13 @@ class  TileDownloader(object):
 			except:
 				raise Exception("文件夹路径格式错误或非文件夹")
 
+		if not self.type in [0,1]:
+			print('type只能是0或1')
+			exit(0)
+		if self.level < 3 or self.level > 18:
+			print('地图比例尺范围必须在3-18之间')
+			exit(0)
+
 	# 获取当前时间，格式 yyyymmdd
 	def getTime(self):
 		t = time.localtime(time.time())
@@ -150,17 +177,21 @@ class  TileDownloader(object):
 	# 爬取瓦片
 	def spideTile(self):
 		while (not self.Task.empty()):
-			url = self.Task.get()
+			params = self.Task.get()
+			if self.type == 0:
+				target_url = 'https://api.map.baidu.com/customimage/tile/'
+			else:
+				target_url = 'https://maponline'+str(random.choice([1,2,3]))+'.bdimg.com/starpic/'
 			try:
-				html = requests.get(url='http://api1.map.bdimg.com/customimage/tile',params=url)
-				with open(self.dir + 'tiles/' + str(url['x']) + '_' + str(url['y']) +'.jpg', 'wb') as file:
+				html = requests.get(url=target_url, params=params)
+				with open(self.dir + 'tiles/' + str(params['x']) + '_' + str(params['y']) +'.jpg', 'wb') as file:
 					file.write(html.content)
 					file.close()
-				print(str(url['x']),str(url['y']),'finish')
+				print(str(params['x']),str(params['y']),'finish','剩余task:',str(self.Task.qsize()))
 			except:
-				self.Task.put(url)
-				self.fail_list.append(url)
-			time.sleep(0.5 + random.random()*0.5)
+				self.Task.put(params)
+				self.fail_list.append(params)
+			time.sleep(0.2 + random.random()*0.2)
 		
 	# 获取所有待爬瓦片号
 	def getTiles(self,swTile,neTile):
