@@ -12,6 +12,7 @@ A Tool for downloading Baidu raster tile according to specific bmap style based 
 	- [green](#green)
 	- [water](#water)
 	- [road](#road)
+	- [RS Image](#rs-image)
 - [style example](#style-example)
 - [开源协议](#%E5%BC%80%E6%BA%90%E5%8D%8F%E8%AE%AE)
 
@@ -31,6 +32,7 @@ A Tool for downloading Baidu raster tile according to specific bmap style based 
 
 |字段名|含义|参考|
 |:--|:--|:--|
+|TARGET_TYPE|栅格类型|0表示个性地图；1表示遥感影像|
 |MY_STYLE|地图样式|说明见[style example](#style-example)|
 |TARGET_AD|目标行政区划名称|合规行政区划名称见[./ChinaAD.py](./ChinaAD.py)|
 |TARGET_LEVEL|目标地图级别|不同要素可视级别不同，详见[style example](#style-example)|
@@ -67,6 +69,11 @@ python __init__.py
 ### road
 
 ![./example/武汉市武昌区_道路/result.jpg](./example/武汉市武昌区_道路/result.jpg)
+
+<a id="rs-image"></a>
+### RS Image
+
+![./example/武汉市武昌区_rs_15/result.jpg](./example/武汉市武昌区_rs_15/result.jpg)
 
 <a id="style-example"></a>
 ## style example
