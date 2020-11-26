@@ -46,23 +46,23 @@ python __init__.py
 以武汉市武昌区为例
 
 <div style="display: flex;flex-direction: row;flex-wrap: wrap;">
-	<div style="display: flex;flex-direction: column;align-items: center;margin-right:30px;">
+	<div style="display: flex;flex-direction: column;align-items: center;margin-right:30px;width:400px;">
 		<img src="./example/武汉市武昌区_建筑/result.jpg" height="400" width="400">
 		<strong style='font-size: 20px'>building</strong>
 	</div>
-	<div style="display: flex;flex-direction: column;align-items: center;margin-right:30px;">
+	<div style="display: flex;flex-direction: column;align-items: center;margin-right:30px;width:400px;">
 		<img src="./example/武汉市武昌区_道路/result.jpg" height="400" width="400">
 		<strong style='font-size: 20px'>road</strong>
 	</div>
-	<div style="display: flex;flex-direction: column;align-items: center;margin-right:30px;">
+	<div style="display: flex;flex-direction: column;align-items: center;margin-right:30px;width:400px;">
 		<img src="./example/武汉市武昌区_绿地/result.jpg" height="400" width="400">
 		<strong style='font-size: 20px'>green</strong>
 	</div>
-	<div style="display: flex;flex-direction: column;align-items: center;margin-right:30px;">
+	<div style="display: flex;flex-direction: column;align-items: center;margin-right:30px;width:400px;">
 		<img src="./example/武汉市武昌区_水体/result.jpg" height="400" width="400">
 		<strong style='font-size: 20px'>water</strong>
 	</div>
-	<div style="display: flex;flex-direction: column;align-items: center;margin-right:30px;">
+	<div style="display: flex;flex-direction: column;align-items: center;margin-right:30px;width:400px;">
 		<img src="./example/武汉市武昌区_rs_15/result.jpg" height="400" width="400">
 		<strong style='font-size: 20px'>RS Image</strong>
 	</div>
