@@ -8,11 +8,6 @@ A Tool for downloading Baidu raster tile according to specific bmap style based 
 - [依赖](#%E4%BE%9D%E8%B5%96)
 - [用法](#%E7%94%A8%E6%B3%95)
 - [效果](#%E6%95%88%E6%9E%9C)
-	- [building](#building)
-	- [green](#green)
-	- [water](#water)
-	- [road](#road)
-	- [RS Image](#rs-image)
 - [style example](#style-example)
 - [开源协议](#%E5%BC%80%E6%BA%90%E5%8D%8F%E8%AE%AE)
 
@@ -50,30 +45,28 @@ python __init__.py
 
 以武汉市武昌区为例
 
-<a id="building"></a>
-### building
-
-![./example/武汉市武昌区_建筑/result.jpg](./example/武汉市武昌区_建筑/result.jpg)
-
-<a id="green"></a>
-### green
-
-![./example/武汉市武昌区_绿地/result.jpg](./example/武汉市武昌区_绿地/result.jpg)
-
-<a id="water"></a>
-### water
-
-![./example/武汉市武昌区_水体/result.jpg](./example/武汉市武昌区_水体/result.jpg)
-
-<a id="road"></a>
-### road
-
-![./example/武汉市武昌区_道路/result.jpg](./example/武汉市武昌区_道路/result.jpg)
-
-<a id="rs-image"></a>
-### RS Image
-
-![./example/武汉市武昌区_rs_15/result.jpg](./example/武汉市武昌区_rs_15/result.jpg)
+<div style="display: flex;flex-direction: row;flex-wrap: wrap;">
+	<div style="display: flex;flex-direction: column;align-items: center;margin-right:30px;">
+		<img src="./example/武汉市武昌区_建筑/result.jpg" height="400" width="400">
+		<strong style='font-size: 20px'>building</strong>
+	</div>
+	<div style="display: flex;flex-direction: column;align-items: center;margin-right:30px;">
+		<img src="./example/武汉市武昌区_道路/result.jpg" height="400" width="400">
+		<strong style='font-size: 20px'>road</strong>
+	</div>
+	<div style="display: flex;flex-direction: column;align-items: center;margin-right:30px;">
+		<img src="./example/武汉市武昌区_绿地/result.jpg" height="400" width="400">
+		<strong style='font-size: 20px'>green</strong>
+	</div>
+	<div style="display: flex;flex-direction: column;align-items: center;margin-right:30px;">
+		<img src="./example/武汉市武昌区_水体/result.jpg" height="400" width="400">
+		<strong style='font-size: 20px'>water</strong>
+	</div>
+	<div style="display: flex;flex-direction: column;align-items: center;margin-right:30px;">
+		<img src="./example/武汉市武昌区_rs_15/result.jpg" height="400" width="400">
+		<strong style='font-size: 20px'>RS Image</strong>
+	</div>
+</div>
 
 <a id="style-example"></a>
 ## style example
