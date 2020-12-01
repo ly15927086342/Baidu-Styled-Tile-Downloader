@@ -35,7 +35,6 @@ class  TileDownloader(object):
 		self.tile_list = []
 		self.Task = Queue()
 		self.thread_pool = []
-		self.fail_list = []
 		self.target_obj = target
 		self.THREAD_MAX = 5
 
@@ -94,9 +93,11 @@ class  TileDownloader(object):
 			t = threading.Thread(target=self.spideTile)
 			t.start()
 			self.thread_pool.append(t)
+
 		# 阻塞线程
 		for thread in self.thread_pool:
 			thread.join()
+
 		self.thread_pool.clear()
 		print('-----瓦片爬取完毕-----')
 
@@ -183,15 +184,13 @@ class  TileDownloader(object):
 			else:
 				target_url = 'https://maponline'+str(random.choice([1,2,3]))+'.bdimg.com/starpic/'
 			try:
-				html = requests.get(url=target_url, params=params)
+				html = requests.get(url=target_url, params=params, timeout=5)
 				with open(self.dir + 'tiles/' + str(params['x']) + '_' + str(params['y']) +'.jpg', 'wb') as file:
 					file.write(html.content)
 					file.close()
 				print(str(params['x']),str(params['y']),'finish','剩余task:',str(self.Task.qsize()))
 			except:
 				self.Task.put(params)
-				self.fail_list.append(params)
-			time.sleep(0.2 + random.random()*0.2)
 		
 	# 获取所有待爬瓦片号
 	def getTiles(self,swTile,neTile):
