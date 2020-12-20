@@ -159,7 +159,17 @@ class LngLatTransfer():
         y = -r * math.log(max(ts, 1E-10))
 
         x = lng * d * r
+
+        # 纠偏，不加这俩值投影后的坐标和百度的平面坐标是不一样的
+        x+=800
+        y+=650
+
         return x, y
+
+        # x =  lng*20037508.342789/180
+        # y = math.log(math.tan((90+lat)*math.pi/360))/(math.pi/180)
+        # y = y *20037508.34789/180
+        # return x, y
 
     def WebMercator_to_WGS84(self, x, y):
         '''
