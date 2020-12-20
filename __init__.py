@@ -12,6 +12,8 @@ if __name__ == '__main__':
 		AD = TARGET_AD,
 		level = TARGET_LEVEL,
 		dir_path = ROOT_DIR,
-		target = TARGET_OBJECT)
+		target = TARGET_OBJECT,
+		drawBoundary = B_isDraw,
+		boundaryStyle = B_style)
 
 	TD.run()

@@ -6,6 +6,8 @@ from TileXY import *
 from getBounds import *
 from queue import Queue
 from PIL import Image
+from LngLatToPixel import RegionToPixels
+from drawBoundary import drawPoly
 import time
 import requests
 import random
@@ -24,7 +26,8 @@ class  TileDownloader(object):
 	# @param target [突出要素的名称，可不写，只和输出文件名有关]
 	# @param level [地图的比例尺]
 	# @param scale [图片放大倍数，1为正常大小（256*256）]
-	def __init__(self, type = 0, style = [], AD = '', dir_path = './', target = '' , level = 15, scale = 1):
+	def __init__(self, type = 0, style = [], AD = '', dir_path = './',\
+		target = '' , level = 15, scale = 1, drawBoundary = False, boundaryStyle = {}):
 		super( TileDownloader, self).__init__()
 		self.type = type
 		self.style = style
@@ -32,6 +35,8 @@ class  TileDownloader(object):
 		self.dir = dir_path
 		self.level = level
 		self.scale = scale
+		self.isDraw = drawBoundary
+		self.b_style = boundaryStyle
 		self.tile_list = []
 		self.Task = Queue()
 		self.thread_pool = []
@@ -39,6 +44,7 @@ class  TileDownloader(object):
 		self.THREAD_MAX = 5
 
 	def run(self):
+
 		self.getTime()
 		print('-----地图样式生成-----')
 		self.generateStyle()
@@ -54,19 +60,41 @@ class  TileDownloader(object):
 		print('-----行政区获取完毕-----')
 
 
-		print('-----检查文件夹路径-----')
-		self.checkParms()
-		print('-----路径检查完毕-----')
-		
-
 		print('-----经纬度转瓦片号-----')
 		self.swTile = WGS84_to_TILE(self.bounds['southwest'][0],self.bounds['southwest'][1],self.level)
 		self.neTile = WGS84_to_TILE(self.bounds['northeast'][0],self.bounds['northeast'][1],self.level)
+		self.getTiles(self.swTile,self.neTile)
 		print('-----瓦片号获取完毕-----')
 
 
-		print('-----多线程爬取瓦片-----')
-		self.getTiles(self.swTile,self.neTile)
+		print('-----检查文件夹路径-----')
+		doDownload = self.checkParms()
+		print('-----路径检查完毕-----')
+
+
+		if doDownload:
+			print('-----多线程爬取瓦片-----')
+			self.openThread()
+			print('-----瓦片爬取完毕-----')
+
+
+		print('-----图片开始合成-----')
+		self.generatePic()
+		print('-----图片合成完毕-----')
+
+
+		if self.isDraw:
+			print('-----绘制行政边界-----')
+			polys = RegionToPixels(self.region['features'][0]['geometry']['coordinates'],self.level,self.swTile,self.neTile)
+			drawPoly(self.dir + 'result.jpg', polys, self.b_style)
+			print('-----边界绘制完毕-----')
+
+
+		print('-----打印日志-----')
+		self.log()
+		print('-----程序结束-----')
+
+	def openThread(self):
 		print('瓦片总量：' + str(len(self.tile_list)))
 		for tilexy in self.tile_list:
 			if self.type == 0:
@@ -89,6 +117,7 @@ class  TileDownloader(object):
 					'x':tilexy[0],
 					'y':tilexy[1]
 					})
+
 		for i in range(0,self.THREAD_MAX):
 			t = threading.Thread(target=self.spideTile)
 			t.start()
@@ -97,19 +126,7 @@ class  TileDownloader(object):
 		# 阻塞线程
 		for thread in self.thread_pool:
 			thread.join()
-
 		self.thread_pool.clear()
-		print('-----瓦片爬取完毕-----')
-
-
-		print('-----图片开始合成-----')
-		self.generatePic()
-		print('-----图片合成完毕-----')
-
-
-		print('-----打印日志-----')
-		self.log()
-		print('-----程序结束-----')
 
 	# 记录失败链接、图片的范围等信息至dir/log.txt
 	def log(self):
@@ -140,32 +157,40 @@ class  TileDownloader(object):
 		# 保存图片
 		res.save(self.dir + 'result.jpg')
 
-	# 检查文件夹路径
+	# 检查文件夹路径，返回True，需要下载瓦片，返回False，不需要下载瓦片
 	def checkParms(self):
-		if(not self.dir[-1:]=='/'):
-			self.dir = self.dir + '/' + '_'.join([self.AD,self.target_obj,str(self.level)]) + '/'
-		if(not os.path.exists(self.dir)):
-			try:
-				os.makedirs(self.dir)
-			except:
-				raise Exception("文件夹路径格式错误或非文件夹")
-		else:
-			for fn in os.listdir(self.dir):
-				if fn.endswith('.jpg'):
-					raise Exception("目标文件夹下存在图片，请清空文件夹或删除文件夹再运行")
-					exit(0)
-		if(not os.path.exists(self.dir + 'tiles/')):
-			try:
-				os.makedirs(self.dir + 'tiles/')
-			except:
-				raise Exception("文件夹路径格式错误或非文件夹")
-
 		if not self.type in [0,1]:
 			print('type只能是0或1')
 			exit(0)
 		if self.level < 3 or self.level > 18:
 			print('地图比例尺范围必须在3-18之间')
 			exit(0)
+
+		if(not self.dir[-1:]=='/'):
+			self.dir = self.dir + '/' + '_'.join([self.AD,self.target_obj,str(self.level)]) + '/'
+
+		if(not os.path.exists(self.dir)):
+			try:
+				os.makedirs(self.dir)
+			except:
+				raise Exception("文件夹路径格式错误或非文件夹")
+		else:
+			ts = os.listdir(self.dir+'tiles/')
+			if len(ts) != len(self.tile_list):
+				for t in ts:
+					os.remove(self.dir+'tiles/' + t)
+			else:# 瓦片已经下载过了，不用重新下
+				return False
+			# for fn in files:
+			# 	if fn.endswith('.jpg'):
+			# 		raise Exception("目标文件夹下存在图片，请清空文件夹或删除文件夹再运行")
+			# 		exit(0)
+		if(not os.path.exists(self.dir + 'tiles/')):
+			try:
+				os.makedirs(self.dir + 'tiles/')
+			except:
+				raise Exception("文件夹路径格式错误或非文件夹")
+		return True
 
 	# 获取当前时间，格式 yyyymmdd
 	def getTime(self):
