@@ -648,4 +648,4 @@ class ChinaAD:
             except:
                   print('行政区名不完整或不存在')
                   return False
-            return 'https://geo.datav.aliyun.com/areas/bound/geojson?code='+str(self.lADcode[index])
+            return 'https://geo.datav.aliyun.com/areas_v2/bound/'+str(self.lADcode[index])+'.json'
