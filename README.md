@@ -10,11 +10,11 @@ A Tool for downloading Baidu raster tile according to specific bmap style based 
 - [依赖](#%E4%BE%9D%E8%B5%96)
 - [用法](#%E7%94%A8%E6%B3%95)
 - [效果](#%E6%95%88%E6%9E%9C)
+	- [RS](#rs)
+	- [road](#road)
 	- [building](#building)
 	- [green](#green)
 	- [water](#water)
-	- [road](#road)
-	- [RS Image](#rs-image)
 - [style example](#style-example)
 - [开源协议](#%E5%BC%80%E6%BA%90%E5%8D%8F%E8%AE%AE)
 
@@ -25,11 +25,21 @@ A Tool for downloading Baidu raster tile according to specific bmap style based 
 
 - 图片合成：pillow
 - 瓦片请求：requests
+- 多边形绘制：opencv-python + numpy
 
 <a id="%E7%94%A8%E6%B3%95"></a>
 ## 用法
 
-> 步骤一：配置config.py文件
+> 步骤一：安装依赖
+
+python 版本 3.7
+
+一键安装所有依赖
+```shell
+pip install -r requirements.txt
+```
+
+> 步骤二：配置config.py文件
 
 |字段名|含义|参考|
 |:--|:--|:--|
@@ -39,8 +49,10 @@ A Tool for downloading Baidu raster tile according to specific bmap style based 
 |TARGET_LEVEL|目标地图级别|不同要素可视级别不同，详见[style example](#style-example)|
 |TARGET_OBJECT|目标突出要素|用于命名输出文件夹，指瓦片style中突出的要素，无则填''|
 |ROOT_DIR|输出根目录|无|
+|B_isDraw|是否绘制行政边界|True/False|
+|B_style|行政边界的样式对象|{'color': (0,255,0),'thick': 2}|
 
-> 步骤二：运行__init__.py文件
+> 步骤三：运行__init__.py文件
 
 ```shell
 python __init__.py
@@ -49,32 +61,32 @@ python __init__.py
 <a id="%E6%95%88%E6%9E%9C"></a>
 ## 效果
 
-以武汉市武昌区为例
+以北京市朝阳区为例
 
-<a id="building"></a>
-### building
+<a id="rs"></a>
+### RS
 
-<img src="./example/武汉市武昌区_建筑/result.jpg" height="400" width="400">
-
-<a id="green"></a>
-### green
-
-<img src="./example/武汉市武昌区_绿地/result.jpg" height="400" width="400">
-
-<a id="water"></a>
-### water
-
-<img src="./example/武汉市武昌区_水体/result.jpg" height="400" width="400">
+<img src="./example/北京市朝阳区_遥感_13/result.jpg" width="400">
 
 <a id="road"></a>
 ### road
 
-<img src="./example/武汉市武昌区_道路/result.jpg" height="400" width="400">
+<img src="./example/北京市朝阳区_道路_15/result.jpg" width="400">
 
-<a id="rs-image"></a>
-### RS Image
+<a id="building"></a>
+### building
 
-<img src="./example/武汉市武昌区_rs_15/result.jpg" height="400" width="400">
+<img src="./example/北京市朝阳区_建筑_15/result.jpg" width="400">
+
+<a id="green"></a>
+### green
+
+<img src="./example/北京市朝阳区_绿地_15/result.jpg" width="400">
+
+<a id="water"></a>
+### water
+
+<img src="./example/北京市朝阳区_水体_15/result.jpg" width="400">
 
 <a id="style-example"></a>
 ## style example
