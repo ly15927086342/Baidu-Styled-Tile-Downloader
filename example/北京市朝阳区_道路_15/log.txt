@@ -1,0 +1,10 @@
+北京市朝阳区.jpg信息:
+目标突出要素：道路
+时间：2020.12.21 11:25:29
+等级：15
+瓦片范围：6324_2349-6340_2370
+瓦片数量：374
+经纬度范围：116.350882_39.809768-116.645274_40.107933
+样式信息：[{'featureType': 'all', 'elementType': 'labels', 'stylers': {'visibility': 'off'}}, {'featureType': 'road', 'elementType': 'all', 'stylers': {'visibility': 'on'}}, {'featureType': 'background', 'elementType': 'all', 'stylers': {'color': '#ffffffff'}}, {'featureType': 'road', 'elementType': 'all', 'stylers': {'color': '#000000ff'}}]
+压缩样式信息：t:all|e:l|v:off,t:road|e:all|v:on,t:background|e:all|c:#ffffffff,t:road|e:all|c:#000000ff,
+

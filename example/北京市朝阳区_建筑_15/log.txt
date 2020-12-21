@@ -1,0 +1,40 @@
+北京市朝阳区.jpg信息:
+目标突出要素：建筑
+时间：2020.12.21 11:14:9
+等级：15
+瓦片范围：6324_2349-6340_2370
+瓦片数量：374
+经纬度范围：116.350882_39.809768-116.645274_40.107933
+样式信息：[{'featureType': 'all', 'elementType': 'labels', 'stylers': {'visibility': 'off'}}, {'featureType': 'road', 'elementType': 'all', 'stylers': {'visibility': 'off'}}, {'featureType': 'background', 'elementType': 'all', 'stylers': {'color': '#ffffffff'}}, {'featureType': 'building', 'elementType': 'all', 'stylers': {'color': '#ff0000ff'}}]
+压缩样式信息：t:all|e:l|v:off,t:road|e:all|v:off,t:background|e:all|c:#ffffffff,t:building|e:all|c:#ff0000ff,
+
+北京市朝阳区.jpg信息:
+目标突出要素：建筑
+时间：2020.12.21 11:14:46
+等级：15
+瓦片范围：6324_2349-6340_2370
+瓦片数量：374
+经纬度范围：116.350882_39.809768-116.645274_40.107933
+样式信息：[{'featureType': 'all', 'elementType': 'labels', 'stylers': {'visibility': 'off'}}, {'featureType': 'road', 'elementType': 'all', 'stylers': {'visibility': 'off'}}, {'featureType': 'background', 'elementType': 'all', 'stylers': {'color': '#ffffffff'}}, {'featureType': 'building', 'elementType': 'all', 'stylers': {'color': '#ff0000ff'}}]
+压缩样式信息：t:all|e:l|v:off,t:road|e:all|v:off,t:background|e:all|c:#ffffffff,t:building|e:all|c:#ff0000ff,
+
+北京市朝阳区.jpg信息:
+目标突出要素：建筑
+时间：2020.12.21 11:15:0
+等级：15
+瓦片范围：6324_2349-6340_2370
+瓦片数量：374
+经纬度范围：116.350882_39.809768-116.645274_40.107933
+样式信息：[{'featureType': 'all', 'elementType': 'labels', 'stylers': {'visibility': 'off'}}, {'featureType': 'road', 'elementType': 'all', 'stylers': {'visibility': 'off'}}, {'featureType': 'background', 'elementType': 'all', 'stylers': {'color': '#ffffffff'}}, {'featureType': 'building', 'elementType': 'all', 'stylers': {'color': '#ff0000ff'}}]
+压缩样式信息：t:all|e:l|v:off,t:road|e:all|v:off,t:background|e:all|c:#ffffffff,t:building|e:all|c:#ff0000ff,
+
+北京市朝阳区.jpg信息:
+目标突出要素：建筑
+时间：2020.12.21 11:15:16
+等级：15
+瓦片范围：6324_2349-6340_2370
+瓦片数量：374
+经纬度范围：116.350882_39.809768-116.645274_40.107933
+样式信息：[{'featureType': 'all', 'elementType': 'labels', 'stylers': {'visibility': 'off'}}, {'featureType': 'road', 'elementType': 'all', 'stylers': {'visibility': 'off'}}, {'featureType': 'background', 'elementType': 'all', 'stylers': {'color': '#ffffffff'}}, {'featureType': 'building', 'elementType': 'all', 'stylers': {'color': '#ff0000ff'}}]
+压缩样式信息：t:all|e:l|v:off,t:road|e:all|v:off,t:background|e:all|c:#ffffffff,t:building|e:all|c:#ff0000ff,
+

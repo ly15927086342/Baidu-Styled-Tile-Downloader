@@ -1,0 +1,10 @@
+北京市朝阳区.jpg信息:
+目标突出要素：绿地
+时间：2020.12.21 11:20:47
+等级：15
+瓦片范围：6324_2349-6340_2370
+瓦片数量：374
+经纬度范围：116.350882_39.809768-116.645274_40.107933
+样式信息：[{'featureType': 'all', 'elementType': 'labels', 'stylers': {'visibility': 'off'}}, {'featureType': 'road', 'elementType': 'all', 'stylers': {'visibility': 'off'}}, {'featureType': 'background', 'elementType': 'all', 'stylers': {'color': '#ffffffff'}}, {'featureType': 'green', 'elementType': 'all', 'stylers': {'color': '#00ff00ff'}}]
+压缩样式信息：t:all|e:l|v:off,t:road|e:all|v:off,t:background|e:all|c:#ffffffff,t:green|e:all|c:#00ff00ff,
+
