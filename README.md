@@ -45,7 +45,8 @@ pip install -r requirements.txt
 |:--|:--|:--|
 |TARGET_TYPE|栅格类型|0表示个性地图；1表示遥感影像|
 |MY_STYLE|地图样式|说明见[style example](#style-example)|
-|TARGET_AD|目标行政区划名称|合规行政区划名称见[./ChinaAD.py](./ChinaAD.py)|
+|TARGET_NAME|目标行政区划名称，需要带上省市区县|北京市朝阳区|
+|TARGET_CODE|目标行政区划区号，6位|110105|
 |TARGET_LEVEL|目标地图级别|不同要素可视级别不同，详见[style example](#style-example)|
 |TARGET_OBJECT|目标突出要素|用于命名输出文件夹，指瓦片style中突出的要素，无则填''|
 |ROOT_DIR|输出根目录|无|

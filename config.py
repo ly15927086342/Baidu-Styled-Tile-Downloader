@@ -60,10 +60,10 @@ TARGET_OBJECT = '道路'
 TARGET_TYPE = 1
 
 # 是否绘制边界
-B_isDraw = True
+B_ISDRAW = True
 
 # 边界的样式
-B_style = {
+B_STYLE = {
 	'color': (0,0,255),# BGR顺序，即(blue, green, red)，颜色值0-255
 	'thick': 5 #线宽
 }

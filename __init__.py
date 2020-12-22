@@ -16,7 +16,7 @@ if __name__ == '__main__':
 		target = TARGET_OBJECT,
 		levelControl = AUTO_LEVEL,
 		saveTile = SAVE_TILE,
-		drawBoundary = B_isDraw,
-		boundaryStyle = B_style)
+		drawBoundary = B_ISDRAW,
+		boundaryStyle = B_STYLE)
 
 	TD.run()
