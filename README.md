@@ -51,6 +51,8 @@ pip install -r requirements.txt
 |ROOT_DIR|输出根目录|无|
 |B_isDraw|是否绘制行政边界|True/False|
 |B_style|行政边界的样式对象|{'color': (0,255,0),'thick': 2}|
+|SAVE_TILE|是否保留瓦片文件夹|默认True|
+|AUTO_LEVEL|爬遥感影像时level是否由系统决定|默认False|
 
 > 步骤三：运行__init__.py文件
 
