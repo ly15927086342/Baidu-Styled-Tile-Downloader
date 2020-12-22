@@ -26,44 +26,55 @@ class  TileDownloader(object):
 	# @param target [突出要素的名称，可不写，只和输出文件名有关]
 	# @param level [地图的比例尺]
 	# @param scale [图片放大倍数，1为正常大小（256*256）]
-	def __init__(self, type = 0, style = [], AD = '', dir_path = './',\
-		target = '' , level = 15, scale = 1, drawBoundary = False, boundaryStyle = {}):
+	def __init__(self, type = 0, style = [], adCode = None, adName = None, dir_path = './',\
+		target = '' , level = 15, levelControl = False, scale = 1, drawBoundary = False, \
+		boundaryStyle = {}, saveTile = True):
 		super( TileDownloader, self).__init__()
 		self.type = type
 		self.style = style
-		self.AD = AD
+		self.adCode = adCode
+		self.adName = adName
 		self.dir = dir_path
 		self.level = level
+		self.levelControl = levelControl
 		self.scale = scale
 		self.isDraw = drawBoundary
 		self.b_style = boundaryStyle
 		self.tile_list = []
+		self.saveTile = saveTile
 		self.Task = Queue()
 		self.thread_pool = []
 		self.target_obj = target
-		self.THREAD_MAX = 5
+		self.THREAD_MAX = 2
 
 	def run(self):
 
 		self.getTime()
-		print('-----地图样式生成-----')
-		self.generateStyle()
-		print('-----样式生成完毕-----')
-
 
 		print('-----开始获取行政区-----')
-		url = ChinaAD().ADName_to_Url(self.AD)
+		[url, self.adName, self.adCode] = ChinaAD().adPropertyToUrl(name = self.adName, code = self.adCode)
 		if(url == False):
 			exit(0)
+		print(self.adName + ':' + str(self.adCode))
 		self.region = json.loads(requests.get(url).text)
 		self.bounds = getBounds(self.region)
 		print('-----行政区获取完毕-----')
+
+		print('-----地图样式生成-----')
+		self.generateStyle()
+		print('-----样式生成完毕-----')
 
 
 		print('-----经纬度转瓦片号-----')
 		self.swTile = WGS84_to_TILE(self.bounds['southwest'][0],self.bounds['southwest'][1],self.level)
 		self.neTile = WGS84_to_TILE(self.bounds['northeast'][0],self.bounds['northeast'][1],self.level)
 		self.getTiles(self.swTile,self.neTile)
+		# 遥感影像，且瓦片数量超过500，缩小level
+		while self.levelControl and len(self.tile_list) > 500:
+			self.level = self.level - 1
+			self.swTile = WGS84_to_TILE(self.bounds['southwest'][0],self.bounds['southwest'][1],self.level)
+			self.neTile = WGS84_to_TILE(self.bounds['northeast'][0],self.bounds['northeast'][1],self.level)
+			self.getTiles(self.swTile,self.neTile)
 		print('-----瓦片号获取完毕-----')
 
 
@@ -132,7 +143,7 @@ class  TileDownloader(object):
 	def log(self):
 		t = time.localtime()
 		with open(self.dir + 'log.txt', 'a', encoding='utf-8') as file:
-			file.write(self.AD + '.jpg信息:\n')
+			file.write(self.adName + '.jpg信息:\n')
 			file.write('目标突出要素：' + self.target_obj + '\n')
 			file.write('时间：' + '.'.join([str(t.tm_year),str(t.tm_mon),str(t.tm_mday)]) + ' ' + ':'.join([str(t.tm_hour),str(t.tm_min),str(t.tm_sec)]) + '\n')
 			file.write('等级：' + str(self.level) + '\n')
@@ -141,6 +152,7 @@ class  TileDownloader(object):
 			file.write('经纬度范围：' + str(self.bounds['southwest'][0]) + '_' + str(self.bounds['southwest'][1]) + '-' + str(self.bounds['northeast'][0]) + '_' + str(self.bounds['northeast'][1]) + '\n')
 			file.write('样式信息：' + str(self.style)+ '\n') 
 			file.write('压缩样式信息：' + str(self.style_str)+ '\n') 
+			file.write('行政区json：' + json.dumps(self.region))
 			file.write('\n')
 
 	# 图片生成
@@ -156,6 +168,12 @@ class  TileDownloader(object):
 					pass
 		# 保存图片
 		res.save(self.dir + 'result.jpg')
+		# 无需保留瓦片，则清空
+		if not self.saveTile:
+			ts = os.listdir(self.dir+'tiles/')
+			for t in ts:
+				os.remove(self.dir+'tiles/' + t)
+			os.rmdir(self.dir+'tiles/')
 
 	# 检查文件夹路径，返回True，需要下载瓦片，返回False，不需要下载瓦片
 	def checkParms(self):
@@ -167,7 +185,7 @@ class  TileDownloader(object):
 			exit(0)
 
 		if(not self.dir[-1:]=='/'):
-			self.dir = self.dir + '/' + '_'.join([self.AD,self.target_obj,str(self.level)]) + '/'
+			self.dir = self.dir + '/' + '_'.join([self.adName,self.target_obj,str(self.level)]) + '/'
 
 		if(not os.path.exists(self.dir)):
 			try:
@@ -181,10 +199,6 @@ class  TileDownloader(object):
 					os.remove(self.dir+'tiles/' + t)
 			else:# 瓦片已经下载过了，不用重新下
 				return False
-			# for fn in files:
-			# 	if fn.endswith('.jpg'):
-			# 		raise Exception("目标文件夹下存在图片，请清空文件夹或删除文件夹再运行")
-			# 		exit(0)
 		if(not os.path.exists(self.dir + 'tiles/')):
 			try:
 				os.makedirs(self.dir + 'tiles/')
@@ -219,6 +233,7 @@ class  TileDownloader(object):
 		
 	# 获取所有待爬瓦片号
 	def getTiles(self,swTile,neTile):
+		self.tile_list = []
 		for lng in range(swTile[0],neTile[0]+1):
 			for lat in range(swTile[1],neTile[1]+1):
 				self.tile_list.append([lng,lat])
