@@ -1,13 +1,13 @@
 #coding = 'utf-8'
 
-from ChinaAD import *
-from CoordTransform import *
-from TileXY import *
-from getBounds import *
+from utils.ChinaAD import *
+from utils.CoordTransform import *
+from utils.TileXY import *
+from utils.getBounds import *
+from utils.LngLatToPixel import RegionToPixels
+from utils.drawBoundary import drawPoly
 from queue import Queue
 from PIL import Image
-from LngLatToPixel import RegionToPixels
-from drawBoundary import drawPoly
 import time
 import requests
 import random

@@ -1,7 +1,7 @@
 #coding = 'utf-8'
 
-from CoordTransform import LngLatTransfer
-from TileXY import WGS84_to_TILE
+from utils.CoordTransform import LngLatTransfer
+from utils.TileXY import WGS84_to_TILE
 # from pyproj import Transformer
 import numpy as np
 import math
