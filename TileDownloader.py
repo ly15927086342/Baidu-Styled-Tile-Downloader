@@ -21,11 +21,16 @@ import threading
 class  TileDownloader(object):
 	# @param type [0:个性地图栅格瓦片；1:遥感影像栅格瓦片]
 	# @param style [个性地图style json]
-	# @param AD [行政区划完整名称，如果是某个区，需要带上市，具体命名见ChinaAD.py]
+	# @param adCode [行政区划区号]
+	# @param adName [行政区划区名]
 	# @param dir_path [输出文件的文件夹路径]
 	# @param target [突出要素的名称，可不写，只和输出文件名有关]
-	# @param level [地图的比例尺]
+	# @param level [瓦片等级]
+	# @param levelControl [是否根据瓦片数量调整瓦片等级]
 	# @param scale [图片放大倍数，1为正常大小（256*256）]
+	# @param drawBoundary [是否绘制行政边界]
+	# @param boundaryStyle [行政边界样式，如{color:(0,0,0),thick:5}]
+	# @param saveTile [是否保留瓦片文件夹]
 	def __init__(self, type = 0, style = [], adCode = None, adName = None, dir_path = './',\
 		target = '' , level = 15, levelControl = False, scale = 1, drawBoundary = False, \
 		boundaryStyle = {}, saveTile = True):
@@ -47,9 +52,13 @@ class  TileDownloader(object):
 		self.target_obj = target
 		self.THREAD_MAX = 2
 
+	# 启动爬虫
 	def run(self):
 
+		print('-----获取当前时间-----')
 		self.getTime()
+		print('-----获取完毕-----')
+
 
 		print('-----开始获取行政区-----')
 		[url, self.adName, self.adCode] = ChinaAD().adPropertyToUrl(name = self.adName, code = self.adCode)
@@ -59,6 +68,7 @@ class  TileDownloader(object):
 		self.region = json.loads(requests.get(url).text)
 		self.bounds = getBounds(self.region)
 		print('-----行政区获取完毕-----')
+
 
 		print('-----地图样式生成-----')
 		self.generateStyle()
@@ -105,6 +115,7 @@ class  TileDownloader(object):
 		self.log()
 		print('-----程序结束-----')
 
+	# 开启多线程
 	def openThread(self):
 		print('瓦片总量：' + str(len(self.tile_list)))
 		for tilexy in self.tile_list:
