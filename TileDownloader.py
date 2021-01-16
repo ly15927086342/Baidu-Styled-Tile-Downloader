@@ -21,6 +21,8 @@ import threading
 class  TileDownloader(object):
 	# @param type [0:个性地图栅格瓦片；1:遥感影像栅格瓦片]
 	# @param style [个性地图style json]
+	# @param rectorDist [矩形范围or行政区划]
+	# @param rectBox [矩形范围]
 	# @param adCode [行政区划区号]
 	# @param adName [行政区划区名]
 	# @param dir_path [输出文件的文件夹路径]
@@ -31,14 +33,18 @@ class  TileDownloader(object):
 	# @param drawBoundary [是否绘制行政边界]
 	# @param boundaryStyle [行政边界样式，如{color:(0,0,0),thick:5}]
 	# @param saveTile [是否保留瓦片文件夹]
-	def __init__(self, type = 0, style = [], adCode = None, adName = None, dir_path = './',\
-		target = '' , level = 15, levelControl = False, scale = 1, drawBoundary = False, \
+	def __init__(self, type = 0, style = [], rectorDist = 1, \
+		adCode = None, adName = None, rectBox = [(0,0),(0,0)], \
+		dir_path = './', target = '' , level = 15, \
+		levelControl = False, scale = 1, drawBoundary = False, \
 		boundaryStyle = {}, saveTile = True):
 		super( TileDownloader, self).__init__()
 		self.type = type
 		self.style = style
+		self.rectOrDist = rectorDist
 		self.adCode = adCode
 		self.adName = adName
+		self.rectBox = rectBox
 		self.dir = dir_path
 		self.level = level
 		self.levelControl = levelControl
@@ -60,14 +66,19 @@ class  TileDownloader(object):
 		print('-----获取完毕-----')
 
 
-		print('-----开始获取行政区-----')
-		[url, self.adName, self.adCode] = ChinaAD().adPropertyToUrl(name = self.adName, code = self.adCode)
-		if(url == False):
-			exit(0)
-		print(self.adName + ':' + str(self.adCode))
-		self.region = json.loads(requests.get(url).text)
-		self.bounds = getBounds(self.region)
-		print('-----行政区获取完毕-----')
+		if self.rectOrDist == 0:
+			self.bounds = {}
+			self.bounds['southwest'] = self.rectBox[0]
+			self.bounds['northeast'] = self.rectBox[1]
+		elif self.rectOrDist == 1:
+			print('-----开始获取行政区-----')
+			[url, self.adName, self.adCode] = ChinaAD().adPropertyToUrl(name = self.adName, code = self.adCode)
+			if(url == False):
+				exit(0)
+			print(self.adName + ':' + str(self.adCode))
+			self.region = json.loads(requests.get(url).text)
+			self.bounds = getBounds(self.region)
+			print('-----行政区获取完毕-----')
 
 
 		print('-----地图样式生成-----')
@@ -105,8 +116,13 @@ class  TileDownloader(object):
 
 
 		if self.isDraw:
-			print('-----绘制行政边界-----')
-			polys = RegionToPixels(self.region['features'][0]['geometry']['coordinates'],self.level,self.swTile,self.neTile)
+			if self.rectOrDist == 0:
+				reg = [self.rectBox[0],(self.rectBox[1][0],self.rectBox[0][1]),
+				self.rectBox[1],(self.rectBox[0][0],self.rectBox[1][1]),self.rectBox[0]]
+				polys = RegionToPixels([[reg]],self.level,self.swTile,self.neTile)
+			elif self.rectOrDist == 1:
+				polys = RegionToPixels(self.region['features'][0]['geometry']['coordinates'],self.level,self.swTile,self.neTile)
+			print('-----绘制边界-----')
 			drawPoly(self.dir + 'result.jpg', polys, self.b_style)
 			print('-----边界绘制完毕-----')
 
@@ -154,7 +170,8 @@ class  TileDownloader(object):
 	def log(self):
 		t = time.localtime()
 		with open(self.dir + 'log.txt', 'a', encoding='utf-8') as file:
-			file.write(self.adName + '.jpg信息:\n')
+			if self.rectOrDist == 1:
+				file.write(self.adName + '.jpg信息:\n')
 			file.write('目标突出要素：' + self.target_obj + '\n')
 			file.write('时间：' + '.'.join([str(t.tm_year),str(t.tm_mon),str(t.tm_mday)]) + ' ' + ':'.join([str(t.tm_hour),str(t.tm_min),str(t.tm_sec)]) + '\n')
 			file.write('等级：' + str(self.level) + '\n')
@@ -162,8 +179,9 @@ class  TileDownloader(object):
 			file.write('瓦片数量：' + str(len(self.tile_list)) + '\n')
 			file.write('经纬度范围：' + str(self.bounds['southwest'][0]) + '_' + str(self.bounds['southwest'][1]) + '-' + str(self.bounds['northeast'][0]) + '_' + str(self.bounds['northeast'][1]) + '\n')
 			file.write('样式信息：' + str(self.style)+ '\n') 
-			file.write('压缩样式信息：' + str(self.style_str)+ '\n') 
-			file.write('行政区json：' + json.dumps(self.region))
+			file.write('压缩样式信息：' + str(self.style_str)+ '\n')
+			if self.rectOrDist == 1:
+				file.write('行政区json：' + json.dumps(self.region))
 			file.write('\n')
 
 	# 图片生成
@@ -196,7 +214,7 @@ class  TileDownloader(object):
 			exit(0)
 
 		if(not self.dir[-1:]=='/'):
-			self.dir = self.dir + '/' + '_'.join([self.adName,self.target_obj,str(self.level)]) + '/'
+			self.dir = self.dir + '/' + '_'.join([self.adName if self.adName is not None else '',self.target_obj,str(self.level)]) + '/'
 
 		if(not os.path.exists(self.dir)):
 			try:
@@ -204,17 +222,17 @@ class  TileDownloader(object):
 			except:
 				raise Exception("文件夹路径格式错误或非文件夹")
 		else:
+			if(not os.path.exists(self.dir + 'tiles/')):
+				try:
+					os.makedirs(self.dir + 'tiles/')
+				except:
+					raise Exception("文件夹路径格式错误或非文件夹")
 			ts = os.listdir(self.dir+'tiles/')
 			if len(ts) != len(self.tile_list):
 				for t in ts:
 					os.remove(self.dir+'tiles/' + t)
 			else:# 瓦片已经下载过了，不用重新下
 				return False
-		if(not os.path.exists(self.dir + 'tiles/')):
-			try:
-				os.makedirs(self.dir + 'tiles/')
-			except:
-				raise Exception("文件夹路径格式错误或非文件夹")
 		return True
 
 	# 获取当前时间，格式 yyyymmdd
@@ -244,6 +262,9 @@ class  TileDownloader(object):
 		
 	# 获取所有待爬瓦片号
 	def getTiles(self,swTile,neTile):
+		if swTile[0]-neTile[0] > 0 or swTile[1]-neTile[1] > 0:
+			raise Exception("瓦片范围有误，请检查区域范围")
+			exit()
 		self.tile_list = []
 		for lng in range(swTile[0],neTile[0]+1):
 			for lat in range(swTile[1],neTile[1]+1):

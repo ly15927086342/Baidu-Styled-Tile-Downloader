@@ -17,6 +17,8 @@ if __name__ == '__main__':
 		levelControl = AUTO_LEVEL,
 		saveTile = SAVE_TILE,
 		drawBoundary = B_ISDRAW,
-		boundaryStyle = B_STYLE)
+		boundaryStyle = B_STYLE,
+		rectorDist = RECT_OR_DISTRICT,
+		rectBox = RECT_BOX)
 
 	TD.run()
