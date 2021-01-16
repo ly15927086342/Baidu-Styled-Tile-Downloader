@@ -54,6 +54,8 @@ pip install -r requirements.txt
 |B_style|行政边界的样式对象|{'color': (0,255,0),'thick': 2}|
 |SAVE_TILE|是否保留瓦片文件夹|默认True|
 |AUTO_LEVEL|爬遥感影像时level是否由系统决定|默认False|
+|RECT_OR_DISTRICT|按矩形范围还是行政区划爬取瓦片|0表示矩形；1表示行政区划|
+|RECT_BOX|矩形范围（Wgs84坐标系）|[(西南角经度,西南角纬度),(东北角经度,东北角纬度)]|
 
 > 步骤三：运行__init__.py文件
 
